@@ -1,6 +1,24 @@
 const button = document.getElementById("btn");
 const container = document.getElementById("container");
 
+function generateRandomColor() {
+    let redVal = Math.floor(Math.random() * 256);
+    let blueVal = Math.floor(Math.random() * 256);
+    let greenVal = Math.floor(Math.random() * 256);
+    return `rgb(${redVal}, ${blueVal}, ${greenVal}, 0.1)`;
+}
+
+function updateOpacity(boxColor) {
+    let newOpacity = parseFloat(boxColor[3]);
+    newOpacity += 0.1;
+    if (newOpacity >= 1.0) {
+        return;
+    } else {
+        boxColor[3] = newOpacity;
+        return boxColor.join(",");
+    }
+}
+
 function createGrid(n) {
     container.innerHTML = "";
 
@@ -10,7 +28,15 @@ function createGrid(n) {
         div.style.width = boxSize + "px";
         div.style.height = boxSize + "px";
         container.appendChild(div);
-        div.addEventListener("mouseenter", (e) => e.target.style.backgroundColor = "black");
+        let randomColor = generateRandomColor();
+        div.addEventListener("mouseenter", (e) => {
+            if (e.target.style.backgroundColor == "") {
+                e.target.style.backgroundColor = randomColor;
+            } else {
+                let boxColor = e.target.style.backgroundColor.split(",");
+                e.target.style.backgroundColor = updateOpacity(boxColor);
+            }
+        });
     }
 }
 
